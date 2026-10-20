@@ -243,7 +243,31 @@ function k(w){return w.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g
 function words(s){return s.split(/\s+/).filter(Boolean)}
 var NUM={en:['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve'],es:['cero','uno','dos','tres','cuatro','cinco','seis','siete','ocho','nueve','diez','once','doce']};
 function expand(s){s=s.toLowerCase().replace(/[’‘]/g,"'").replace(/can't/g,'cannot').replace(/won't/g,'will not').replace(/let's/g,'let us').replace(/n't/g,' not').replace(/\bi'm\b/g,'i am').replace(/'ll/g,' will').replace(/'re/g,' are').replace(/'ve/g,' have').replace(/\b(it|he|she|that|what|there)'s\b/g,'$1 is').replace(/\bcan not\b/g,'cannot');return s.replace(/\b\d+\b/g,function(m){return NUM[S.lang][+m]||m})}
-function say(t,rt){try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang=LC[S.lang];u.rate=rt||.9;speechSynthesis.speak(u)}catch(e){}}
+function say(t, rt) {
+  try {
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(t);
+    u.lang = LC[S.lang];
+    u.rate = rt || .9;
+    
+    // Procura vozes de alta qualidade ou da Google instaladas no dispositivo
+        var voices = speechSynthesis.getVoices();
+    var preferredVoice = voices.find(function(v) {
+      return v.lang === LC[S.lang] && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Neural') || v.name.includes('Enhanced'));
+    }
+   
+    if (preferredVoice) {
+      u.voice = preferredVoice;
+    }
+    
+    speechSynthesis.speak(u);
+  } catch (e) {}
+// Garante que as vozes são carregadas caso demorem um momento no telemóvel
+if ('speechSynthesis' in window) {
+  speechSynthesis.onvoiceschanged = function() {
+    speechSynthesis.getVoices();
+  };
+}
 function learn(){
  if(!L){V.innerHTML='<div class="card"><b>Escolha um tema</b> <small>'+LN[S.lv[S.lang]]+' · '+TL().filter(function(x,i){return S.done[S.lang+S.lv[S.lang]+i]}).length+'/'+TL().length+' concluídos</small><p class="pt">Ouça, repita em voz alta e veja o que acertou palavra por palavra.</p>'+TL().map(function(l,i){return '<button class="topic" data-i="'+i+'"><span>'+(S.done[S.lang+S.lv[S.lang]+i]?'✅ ':'')+l.t+'</span><small>'+l.p.length+' frases</small></button>'}).join('')+'</div>';
   V.querySelectorAll('.topic').forEach(function(b){b.onclick=function(){L={i:+b.dataset.i,n:0,done:false};learn()}});return}
