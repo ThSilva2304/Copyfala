@@ -292,7 +292,7 @@ function learn(){
  var fa=document.getElementById('fa');
  if(fa)fa.onclick=function(){var R=window.SpeechRecognition||window.webkitSpeechRecognition,r=new R();r.lang=LC[S.lang];r.interimResults=false;fa.textContent='👂 Ouvindo...';fa.disabled=true;
   r.onresult=function(e){var t=e.results[0][0].transcript;document.getElementById('tx').value=t;check(t)};
-  r.onerror=function(e){document.getElementById('rs'].textContent=(e&&e.error==='not-allowed')?'Microfone bloqueado: permita o acesso ou digite a frase.':'Não consegui ouvir. Tente de novo ou digite a frase.'};
+  r.onerror=function(e){document.getElementById('rs').textContent=(e&&e.error==='not-allowed')?'Microfone bloqueado: permita o acesso ou digite a frase.':'Não consegui ouvir. Tente de novo ou digite a frase.'};
   r.onend=function(){fa.textContent='🎤 Falar';fa.disabled=false};try{r.start()}catch(e){fa.disabled=false;fa.textContent='🎤 Falar'}};
  document.getElementById('vf').onclick=function(){check(document.getElementById('tx').value)};
  document.getElementById('tx').onkeydown=function(e){if(e.key==='Enter')check(this.value)};
