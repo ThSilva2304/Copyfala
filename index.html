@@ -315,8 +315,8 @@ function capy(){
  document.getElementById('mv').onclick=function(){S.lv[S.lang]='';save();draw()};var rm=document.getElementById('rm');if(rm)rm.onclick=function(){S.hat='';save();draw()};
 }
 draw();
-    <script>
-     </script>
+</script>
+<script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('./pwabuilder-sw.js')
@@ -324,5 +324,6 @@ draw();
             .catch(err => console.log('Falha ao registar o Service Worker:', err));
         });
     }
+</script>
   </body>
 </html>
